@@ -65,6 +65,34 @@ def loadphoneitem(kw=None):
         "tinhtrang": "Còn Hàng",
         "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
 
+    }, {
+        "ma_dt": 7,
+        "ten_dt": "Iphone 14 ProMax",
+        "gia": 35000000,
+        "tinhtrang": "Còn Hàng",
+        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
+
+    }, {
+        "ma_dt": 8,
+        "ten_dt": "Iphone 14 ProMax",
+        "gia": 35000000,
+        "tinhtrang": "Còn Hàng",
+        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
+
+    }, {
+        "ma_dt": 9,
+        "ten_dt": "Iphone 14 ProMax",
+        "gia": 35000000,
+        "tinhtrang": "Còn Hàng",
+        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
+
+    }, {
+        "ma_dt": 9,
+        "ten_dt": "Iphone 14 ProMax",
+        "gia": 35000000,
+        "tinhtrang": "Còn Hàng",
+        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
+
     }]
     if kw:
         phones = [p for p in phones if p["ten_dt"].lower().find(kw.lower()) >= 0]
