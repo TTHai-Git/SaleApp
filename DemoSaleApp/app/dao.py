@@ -1,3 +1,9 @@
+from flask import session
+from app import app
+from sqlalchemy import select
+from app.models import Category
+
+
 def loaditemnavbar():
     navitems = [{
         "id": 1,
@@ -94,8 +100,20 @@ def loadphoneitem(kw=None):
         "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
 
     }]
+
     if kw:
         phones = [p for p in phones if p["ten_dt"].lower().find(kw.lower()) >= 0]
     else:
         return phones
     return phones
+
+def hienthidanhsach():
+     ds = select(Category).where(Category.id == 1)
+     dshang = session.execute(ds).one()
+     for row in dshang.sclars():
+        print(f"{row.id} {row.name}")
+
+if __name__ == "__main__":
+    with app.app_context():
+     hienthidanhsach()
+
