@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from app import db, app
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -78,15 +77,15 @@ if __name__ == "__main__":
         #
         # db.session.add(tag1)
         # db.session.add(tag2)
-        #
+
         # db.session.commit()
 
-        #Thêm dữ liêu từ model ánh xạ xuống database
+        # Thêm dữ liêu từ model ánh xạ xuống database
 
-        #p = Product.query.get(1)
+        # p = Product.query.get(1)
         # print(p.__dict__)
         # print(p.category.__dict__)
-        # #
+        #
         # c = Category.query.get(4)
         # print(c.products)
         #
@@ -102,8 +101,16 @@ if __name__ == "__main__":
         # db.session.add(p)
         # db.session.commit()
 
-        #print(p.tags)
+        # print(p.tags)
 
         # print(t1.products)
 
         # print(t2.products)
+
+        #Update And Select Query
+
+        # laptop = db.session.execute(db.select(Product).filter_by(name='Lenovo Ideapad Gamming 3')).scalar_one()
+        # laptop.description = 'Lenovo, 16GB, 250GB SSD, I5 Gen12'
+        # db.session.commit()
+
+

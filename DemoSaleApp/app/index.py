@@ -2,18 +2,13 @@ from flask import render_template, request, jsonify
 import dao
 from app import app
 
+
 @app.route("/")
 def trangchu():
-    navbaritems = dao.loaditemnavbar()
+    navbaritems = dao.loadnavbaritems()
     kw = request.args.get("kw")
-    phones = dao.loadphoneitem(kw)
-    return render_template('index.html', navbaritems=navbaritems, phones=phones)
-
-@app.route("/category")
-def category():
-    dshang = dao.hienthidanhsach()
-    for row in dshang.scalar_subquery():
-        print(f"{row.id} {row.name}")
+    products = dao.loadproducts(kw)
+    return render_template('index.html', navbaritems=navbaritems, products=products)
 
 
 if __name__ == "__main__":

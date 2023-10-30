@@ -1,119 +1,20 @@
-from flask import session
-from app import app
-from sqlalchemy import select
-from app.models import Category
+from app import db, app
+from app.models import Category, Product
 
 
-def loaditemnavbar():
-    navitems = [{
-        "id": 1,
-        "title": "Điện Thoại"
+def loadnavbaritems():
+    navbaritems = db.session.query(Category).all()
+    return navbaritems
 
-    }, {
-        "id": 2,
-        "title": "Laptop"
 
-    }, {
-        "id": 3,
-        "title": "Tablet"
-
-    }, {
-        "id": 4,
-        "title": "Đồ Gia Dụng"
-
-    }, {
-        "id": 5,
-        "title": "PC"
-
-    }]
-    return navitems
-
-def loadphoneitem(kw=None):
-    phones = [{
-        "ma_dt": 1,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 2,
-        "ten_dt": "Samsung S20 Ultra",
-        "gia": 19050000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/217937/samsung-galaxy-s20-ultra-xam-1-org.jpg"
-
-    }, {
-        "ma_dt": 3,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 4,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 5,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 6,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 7,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 8,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 9,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }, {
-        "ma_dt": 9,
-        "ten_dt": "Iphone 14 ProMax",
-        "gia": 35000000,
-        "tinhtrang": "Còn Hàng",
-        "url_image": "https://cdn.tgdd.vn/Products/Images/42/251192/iphone-14-pro-max-purple-1.jpg"
-
-    }]
-
+def loadproducts(kw=None):
+    products = db.session.query(Product).all()
     if kw:
-        phones = [p for p in phones if p["ten_dt"].lower().find(kw.lower()) >= 0]
+        products = [p for p in products if p.name.lower().find(kw.lower()) >= 0]
     else:
-        return phones
-    return phones
+        return products
+    return products
 
-def hienthidanhsach():
-     ds = select(Category).where(Category.id == 1)
-     dshang = session.execute(ds).one()
-     for row in dshang.sclars():
-        print(f"{row.id} {row.name}")
 
 if __name__ == "__main__":
-    with app.app_context():
-     hienthidanhsach()
-
+    pass
