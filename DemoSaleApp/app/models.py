@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app import db, app
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, VARCHAR, NCHAR
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
 
@@ -31,7 +31,8 @@ class Product(db.Model):
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
-    bills = relationship('Bill', backref('product'), lazy=True)
+    bills = relationship('Bill', backref='product', lazy=True)
+
 
 
 class Tag(db.Model):
@@ -46,7 +47,7 @@ class Department(db.Model):
     __tablename__ = "department"
     mapb = Column(String(10), primary_key=True)
     tenpb = Column(String(100), nullable=False, default=None)
-    nhanviens = relationship('Employee', backref('department'), lazy=True)
+    nhanviens = relationship('Employee', backref='department', lazy=True)
 
 
 class Employee(db.Model):
@@ -65,7 +66,7 @@ class Customer(db.Model):
     sodienthoai = Column(String(10), nullable=True, default=None)
     diachi = Column(String(255), nullable=True, default=None, unique=True)
     email = Column(String(100), nullable=True, unique=True, default=None)
-    bills = relationship('Bill', backref('customer'), lazy=True)
+    bills = relationship('Bill', backref='customer', lazy=True)
 
 
 class Bill(db.Model):
@@ -78,9 +79,11 @@ class Bill(db.Model):
     product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
 
 
+
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
+        pass
+        #db.create_all()
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
         # c3 = Category(name='Tablet')
@@ -90,6 +93,7 @@ if __name__ == "__main__":
         # db.session.add(c2)
         # db.session.add(c3)
         # db.session.add(c4)
+        # db.session.commit()
 
         # p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
         #              url_img='url', category_id=4)
@@ -120,7 +124,7 @@ if __name__ == "__main__":
         # Thêm dữ liêu từ model ánh xạ xuống database
 
         # p = Product.query.get(1)
-        # print(p.__dict__)
+        # print(p.name)
         # print(p.category.__dict__)
         #
         # c = Category.query.get(4)
