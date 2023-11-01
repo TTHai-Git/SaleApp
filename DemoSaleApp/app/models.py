@@ -52,10 +52,11 @@ class Department(db.Model):
 class Employee(db.Model):
     __tablename__ = "employee"
     manv = Column(String(10), primary_key=True)
-    tennv = Column(String(100), nullable=False,)
+    tennv = Column(String(100), nullable=False, )
     sodienthoai = Column(String(10), unique=True, default=None)
     diachi = Column(String(255), nullable=True, default=None)
     ma_pb = Column(String(10), ForeignKey(Department.mapb), nullable=False)
+
 
 class Customer(db.Model):
     __tablename__ = "customer"
@@ -66,6 +67,7 @@ class Customer(db.Model):
     email = Column(String(100), nullable=True, unique=True, default=None)
     bills = relationship('Bill', backref('customer'), lazy=True)
 
+
 class Bill(db.Model):
     __tablename__ = "bill"
     idhd = Column(Integer, primary_key=True)
@@ -74,6 +76,7 @@ class Bill(db.Model):
     ngaylaphoadon = Column(DateTime, nullable=False, default=datetime.now())
     makh = Column(String(10), ForeignKey(Customer.makh), nullable=False)
     product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
+
 
 if __name__ == "__main__":
     with app.app_context():
