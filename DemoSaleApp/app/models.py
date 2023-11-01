@@ -1,6 +1,7 @@
 from datetime import datetime
+
 from app import db, app
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, VARCHAR, NCHAR
 from sqlalchemy.orm import relationship, backref
 
 
@@ -30,6 +31,7 @@ class Product(db.Model):
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
+    bills = relationship('Bill', backref('product'), lazy=True)
 
 
 class Tag(db.Model):
@@ -40,10 +42,42 @@ class Tag(db.Model):
     description = Column(String(255), nullable=False, unique=True)
 
 
+class Department(db.Model):
+    __tablename__ = "department"
+    mapb = Column(String(10), primary_key=True)
+    tenpb = Column(String(100), nullable=False, default=None)
+    nhanviens = relationship('Employee', backref('department'), lazy=True)
+
+
+class Employee(db.Model):
+    __tablename__ = "employee"
+    manv = Column(String(10), primary_key=True)
+    tennv = Column(String(100), nullable=False,)
+    sodienthoai = Column(String(10), unique=True, default=None)
+    diachi = Column(String(255), nullable=True, default=None)
+    ma_pb = Column(String(10), ForeignKey(Department.mapb), nullable=False)
+
+class Customer(db.Model):
+    __tablename__ = "customer"
+    makh = Column(String(10), primary_key=True)
+    tenkh = Column(String(100), nullable=False, default=None)
+    sodienthoai = Column(String(10), nullable=True, default=None)
+    diachi = Column(String(255), nullable=True, default=None, unique=True)
+    email = Column(String(100), nullable=True, unique=True, default=None)
+    bills = relationship('Bill', backref('customer'), lazy=True)
+
+class Bill(db.Model):
+    __tablename__ = "bill"
+    idhd = Column(Integer, primary_key=True)
+    soluong = Column(Integer, nullable=False)
+    thanhtien = Column(Float, nullable=False)
+    ngaylaphoadon = Column(DateTime, nullable=False, default=datetime.now())
+    makh = Column(String(10), ForeignKey(Customer.makh), nullable=False)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
+
 if __name__ == "__main__":
     with app.app_context():
-        pass
-        # db.create_all()
+        db.create_all()
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
         # c3 = Category(name='Tablet')
@@ -107,10 +141,8 @@ if __name__ == "__main__":
 
         # print(t2.products)
 
-        #Update And Select Query
+        # Update And Select Query
 
         # laptop = db.session.execute(db.select(Product).filter_by(name='Lenovo Ideapad Gamming 3')).scalar_one()
         # laptop.description = 'Lenovo, 16GB, 250GB SSD, I5 Gen12'
         # db.session.commit()
-
-
