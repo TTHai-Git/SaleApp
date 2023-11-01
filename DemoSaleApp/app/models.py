@@ -95,23 +95,24 @@ if __name__ == "__main__":
         # db.session.add(c4)
         # db.session.commit()
 
-        # p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
-        #              url_img='url', category_id=4)
+        #p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=4)
         # p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
-        #              url_img='url', category_id=4)
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=4)
         # p3 = Product(name='Lenovo Ideapad Gamming 3', price=16000000, description='Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...',
         #              status=True,
-        #              url_img='url', category_id=1)
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=1)
         # p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
         #              url_img='url', category_id=3)
         # p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
-        #              url_img='url', category_id=2)
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=2)
         #
-        # db.session.add(p2)
+        #db.session.add(p1)
+        #db.session.add(p2)
         # db.session.add(p3)
         # db.session.add(p4)
         # db.session.add(p5)
-        # db.session.commit()
+        #db.session.commit()
 
         # tag1 = Tag(id='pmt', name='promotion', description='khuyến mãi')
         # tag2 = Tag(id='new', name='new', description='Hàng Mới Nhập Khẩu')
