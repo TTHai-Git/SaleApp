@@ -63,7 +63,7 @@ class Customer(db.Model):
     __tablename__ = "customer"
     makh = Column(String(10), primary_key=True)
     tenkh = Column(String(100), nullable=False, default=None)
-    sodienthoai = Column(String(10), nullable=True, default=None)
+    sodienthoai = Column(String(10), nullable=True, default=None, unique=True)
     diachi = Column(String(255), nullable=True, default=None, unique=True)
     email = Column(String(100), nullable=True, unique=True, default=None)
     bills = relationship('Bill', backref='customer', lazy=True)
@@ -84,6 +84,8 @@ if __name__ == "__main__":
     with app.app_context():
         pass
         #db.create_all()
+
+
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
         # c3 = Category(name='Tablet')

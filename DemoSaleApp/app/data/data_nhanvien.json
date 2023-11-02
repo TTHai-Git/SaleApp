@@ -1,0 +1,27 @@
+{"listnhanvien":
+  [ {"manv": "NV_01", "tennv": "Nguyen Van A",
+     "sodienthoai": "0123456789", "diachi": "Text","ma_pb": "KT"
+  },
+    {"manv": "NV_02", "tennv": "Tran Van D",
+     "sodienthoai": "397129260", "diachi": "Text","ma_pb": "IT"
+  },
+    {"manv": "NV_03", "tennv": "Do Thi C",
+     "sodienthoai": "4569871230", "diachi": "Text","ma_pb": "IT"
+  },
+    {"manv": "NV_04", "tennv": "Dinh Manh H",
+     "sodienthoai": "1478523690", "diachi": "Text","ma_pb": "MKT"
+  },
+    {"manv": "NV_05", "tennv": "Tran Dinh T",
+     "sodienthoai": "3571594562", "diachi": "Text","ma_pb": "NS"
+  },
+    {"manv": "NV_06", "tennv": "Luu Manh M",
+     "sodienthoai": "365789012", "diachi": "Text","ma_pb": "KT"
+  },
+    {"manv": "NV_07", "tennv": "Ngo Thanh T",
+     "sodienthoai": "2147891230", "diachi": "Text","ma_pb": "MKT"
+  },
+    {"manv": "NV_08", "tennv": "Truong Dinh Nhat C",
+     "sodienthoai": "8974651320", "diachi": "Text","ma_pb": "NS"
+  }]
+}
+
