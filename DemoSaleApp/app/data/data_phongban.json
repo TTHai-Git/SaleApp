@@ -1,7 +1,7 @@
 {"listphongban":
-  [{"mapb": "NS", "tenpb": "NhanSu"},
-    {"mapb": "KT", "tenpb": "KeToan"},
-    {"mapb": "IT", "tenpb": "IT"},
-    {"mapb": "MKT", "tenpb": "Marketing"},
-    {"mapb": "MDA", "tenpb": "Media"}]
+  [{"maphongban": "NS", "tenphongban": "NhanSu"},
+    {"maphongban": "KT", "tenphongban": "KeToan"},
+    {"maphongban": "IT", "tenphongban": "IT"},
+    {"maphongban": "MKT", "tenphongban": "Marketing"},
+    {"maphongban": "MDA", "tenphongban": "Media"}]
 }

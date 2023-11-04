@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from app import db, app
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -10,7 +9,10 @@ class Category(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
-    products = relationship('Product', backref='category', lazy=True)
+    products = relationship("Product", backref="category", lazy=True)
+
+    def __str__(self):
+     return self.name
 
 
 product_tag = db.Table('product_tag',
@@ -28,11 +30,9 @@ class Product(db.Model):
     status = Column(Boolean, nullable=False)
     create_date = Column(DateTime, default=datetime.now())
     url_img = Column(String(255), nullable=False)
-    category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
+    category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
-    bills = relationship('Bill', backref='product', lazy=True)
-
 
 
 class Tag(db.Model):
@@ -42,50 +42,52 @@ class Tag(db.Model):
     name = Column(String(50), nullable=False)
     description = Column(String(255), nullable=False, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Department(db.Model):
     __tablename__ = "department"
-    mapb = Column(String(10), primary_key=True)
-    tenpb = Column(String(100), nullable=False, default=None)
+    maphongban = Column(String(10), primary_key=True)
+    tenphongban = Column(String(100), nullable=False, default=None)
     nhanviens = relationship('Employee', backref='department', lazy=True)
 
+    def __str__(self):
+        return self.tenphongban
 
 class Employee(db.Model):
     __tablename__ = "employee"
-    manv = Column(String(10), primary_key=True)
-    tennv = Column(String(100), nullable=False, )
+    manhanvien = Column(String(10), primary_key=True)
+    tennhanvien = Column(String(100), nullable=False)
     sodienthoai = Column(String(10), unique=True, default=None)
     diachi = Column(String(255), nullable=True, default=None)
-    ma_pb = Column(String(10), ForeignKey(Department.mapb), nullable=False)
+    ma_phongban = Column(String(10), ForeignKey('department.maphongban'), nullable=False)
+
+
 
 
 class Customer(db.Model):
     __tablename__ = "customer"
-    makh = Column(String(10), primary_key=True)
-    tenkh = Column(String(100), nullable=False, default=None)
+    makhachhang = Column(String(10), primary_key=True)
+    tenkhachhang = Column(String(100), nullable=False, default=None)
     sodienthoai = Column(String(10), nullable=True, default=None, unique=True)
     diachi = Column(String(255), nullable=True, default=None, unique=True)
     email = Column(String(100), nullable=True, unique=True, default=None)
-    bills = relationship('Bill', backref='customer', lazy=True)
+    order_products = db.relationship('Product', secondary='order_details', backref=backref('products', lazy=True))
 
 
-class Bill(db.Model):
-    __tablename__ = "bill"
-    idhd = Column(Integer, primary_key=True)
-    soluong = Column(Integer, nullable=False)
-    thanhtien = Column(Float, nullable=False)
-    ngaylaphoadon = Column(DateTime, nullable=False, default=datetime.now())
-    makh = Column(String(10), ForeignKey(Customer.makh), nullable=False)
-    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
-
-
+order_details = db.Table("order_details", Column("id", Integer, primary_key=True, autoincrement=True),
+                         Column("ma_khachhang", ForeignKey('customer.makhachhang'), primary_key=True),
+                         Column("ma_sanpham", ForeignKey('product.id'), primary_key=True),
+                         Column("soluong", Integer, nullable=False),
+                         Column("thanhtien", Float, nullable=False),
+                         Column("ghichu", String(255), nullable=True, default="None"),
+                         Column("ngaylaphoadon", DateTime, nullable=False))
 
 if __name__ == "__main__":
     with app.app_context():
         pass
         #db.create_all()
-
-
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
         # c3 = Category(name='Tablet')
@@ -95,9 +97,8 @@ if __name__ == "__main__":
         # db.session.add(c2)
         # db.session.add(c3)
         # db.session.add(c4)
-        # db.session.commit()
-
-        #p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
+        #
+        # p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
         #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=4)
         # p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
         #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=4)
@@ -105,23 +106,24 @@ if __name__ == "__main__":
         #              status=True,
         #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=1)
         # p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
-        #              url_img='url', category_id=3)
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=3)
         # p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
         #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg', category_id=2)
         #
-        #db.session.add(p1)
-        #db.session.add(p2)
+        # db.session.add(p1)
+        # db.session.add(p2)
         # db.session.add(p3)
         # db.session.add(p4)
         # db.session.add(p5)
-        #db.session.commit()
+        #
+        # db.session.commit()
 
         # tag1 = Tag(id='pmt', name='promotion', description='khuyến mãi')
         # tag2 = Tag(id='new', name='new', description='Hàng Mới Nhập Khẩu')
         #
         # db.session.add(tag1)
         # db.session.add(tag2)
-
+        #
         # db.session.commit()
 
         # Thêm dữ liêu từ model ánh xạ xuống database

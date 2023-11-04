@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify
-import dao
-from app import app
+from app import dao, app
+from app.admin import *
 
 
 @app.route("/")

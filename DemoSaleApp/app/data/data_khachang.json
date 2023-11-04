@@ -1,26 +1,60 @@
-{"listkhachhang":
-  [ {"makh": "KH_01", "tenkh": "Ngo Thi P",
-     "sodienthoai": "0123456789", "diachi": "Q.Tan Phu","email": "abc@gmail.com"
-  },
-    {"makh": "KH_02", "tenkh": "Nguyen The Anh",
-     "sodienthoai": "0987860562", "diachi": "Q.Tan Binh","email": "xyz@gmail.com"
-  },
-    {"makh": "KH_03", "tenkh": "Nguyen Van A",
-     "sodienthoai": "7412589630", "diachi": "Q.09","email": "Demo@gmail.com"
-  },
-    {"makh": "KH_04", "tenkh": "Nguyen Van A",
-     "sodienthoai": "3698521470", "diachi": "Q.01","email": "Test@gmail.com"
-  },
-    {"makh": "KH_05", "tenkh": "Nguyen Van A",
-     "sodienthoai": "3216549870", "diachi": "Q.Phu Nhuan","email": "alias@gmail.com"
-  },
-    {"makh": "KH_06", "tenkh": "Nguyen Van A",
-     "sodienthoai": "1234567890", "diachi": "Q.03","email": "misery@gmail.com"
-  },
-    {"makh": "KH_07", "tenkh": "Nguyen Van A",
-     "sodienthoai": "0258963147", "diachi": "Q.Binh Thanh","email": "Testcase@gmail.com"
-  },
-    {"makh": "KH_08", "tenkh": "Nguyen Van A",
-     "sodienthoai": "2589631470", "diachi": "Q.05","email": "Helloworld@gmail.com"
-  }]
+{
+  "listkhachhang": [
+    {
+      "makhachhang": "KH_01",
+      "tenkhachhang": "Ngo Thi P",
+      "sodienthoai": "0123456789",
+      "diachi": "Q.Tan Phu",
+      "email": "abc@gmail.com"
+    },
+    {
+      "makhachhang": "KH_02",
+      "tenkhachhang": "Nguyen The Anh",
+      "sodienthoai": "0987860562",
+      "diachi": "Q.Tan Binh",
+      "email": "xyz@gmail.com"
+    },
+    {
+      "makhachhang": "KH_03",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "7412589630",
+      "diachi": "Q.09",
+      "email": "Demo@gmail.com"
+    },
+    {
+      "makhachhang": "KH_04",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "3698521470",
+      "diachi": "Q.01",
+      "email": "Test@gmail.com"
+    },
+    {
+      "makhachhang": "KH_05",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "3216549870",
+      "diachi": "Q.Phu Nhuan",
+      "email": "alias@gmail.com"
+    },
+    {
+      "makhachhang": "KH_06",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "1234567890",
+      "diachi": "Q.03",
+      "email": "misery@gmail.com"
+    },
+    {
+      "makhachhang": "KH_07",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "0258963147",
+      "diachi": "Q.Binh Thanh",
+      "email": "Testcase@gmail.com"
+    },
+    {
+      "makhachhang": "KH_08",
+      "tenkhachhang": "Nguyen Van A",
+      "sodienthoai": "2589631470",
+      "diachi": "Q.05",
+      "email": "Helloworld@gmail.com"
+    }
+  ]
 }
