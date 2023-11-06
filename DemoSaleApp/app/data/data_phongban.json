@@ -1,6 +1,6 @@
 {"listphongban":
   [{"maphongban": "NS", "tenphongban": "NhanSu"},
-    {"maphongban": "KT", "tenphongban": "KeToan"},
+    {"maphongban":"KT", "tenphongban": "KeToan"},
     {"maphongban": "IT", "tenphongban": "IT"},
     {"maphongban": "MKT", "tenphongban": "Marketing"},
     {"maphongban": "MDA", "tenphongban": "Media"}]

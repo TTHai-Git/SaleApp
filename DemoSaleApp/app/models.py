@@ -9,10 +9,10 @@ class Category(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
-    products = relationship("Product", backref="category", lazy=True)
+    products = relationship('Product', backref='category', lazy=True)
 
     def __str__(self):
-     return self.name
+        return self.name
 
 
 product_tag = db.Table('product_tag',
@@ -33,6 +33,10 @@ class Product(db.Model):
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
+    order_products = db.relationship('Order_Details', backref='product', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Tag(db.Model):
@@ -55,6 +59,7 @@ class Department(db.Model):
     def __str__(self):
         return self.tenphongban
 
+
 class Employee(db.Model):
     __tablename__ = "employee"
     manhanvien = Column(String(10), primary_key=True)
@@ -63,7 +68,8 @@ class Employee(db.Model):
     diachi = Column(String(255), nullable=True, default=None)
     ma_phongban = Column(String(10), ForeignKey('department.maphongban'), nullable=False)
 
-
+    def __str__(self):
+        return self.tennhanvien
 
 
 class Customer(db.Model):
@@ -73,21 +79,28 @@ class Customer(db.Model):
     sodienthoai = Column(String(10), nullable=True, default=None, unique=True)
     diachi = Column(String(255), nullable=True, default=None, unique=True)
     email = Column(String(100), nullable=True, unique=True, default=None)
-    order_products = db.relationship('Product', secondary='order_details', backref=backref('products', lazy=True))
+    order_products = db.relationship('Order_Details', backref='customer', lazy=True)
+
+    def __str__(self):
+        return self.tenkhachhang
 
 
-order_details = db.Table("order_details", Column("id", Integer, primary_key=True, autoincrement=True),
-                         Column("ma_khachhang", ForeignKey('customer.makhachhang'), primary_key=True),
-                         Column("ma_sanpham", ForeignKey('product.id'), primary_key=True),
-                         Column("soluong", Integer, nullable=False),
-                         Column("thanhtien", Float, nullable=False),
-                         Column("ghichu", String(255), nullable=True, default="None"),
-                         Column("ngaylaphoadon", DateTime, nullable=False))
+class Order_Details(db.Model):
+    __tablename__ = "order_details"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    makhachhangmua = Column(String(10), ForeignKey('customer.makhachhang'))
+    masanphammua = Column(Integer, ForeignKey('product.id'))
+    soluongmua = Column(Integer, nullable=False)
+    thanhtien = Column(Float, nullable=False)
+    ghichu = Column(String(255), nullable=True, default="None")
+    ngaylaphoadon = Column(DateTime, default=datetime.now(), nullable=False)
+
 
 if __name__ == "__main__":
     with app.app_context():
-        pass
-        #db.create_all()
+        # pass
+        # db.create_all()
+        # db.drop_all()
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
         # c3 = Category(name='Tablet')
@@ -158,3 +171,8 @@ if __name__ == "__main__":
         # laptop = db.session.execute(db.select(Product).filter_by(name='Lenovo Ideapad Gamming 3')).scalar_one()
         # laptop.description = 'Lenovo, 16GB, 250GB SSD, I5 Gen12'
         # db.session.commit()
+
+        ods = Order_Details(makhachhangmua='KH_01', masanphammua=1, soluongmua=2, thanhtien=66000000,
+                            ghichu="Khách hàng đã thanh toán qua the. Yêu cầu giao hàng tận nợi")
+        db.session.add(ods)
+        db.session.commit()
