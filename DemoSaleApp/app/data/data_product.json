@@ -1,0 +1,38 @@
+{
+  "listproduct": [{
+    "name": "name='Iphone 14 Promax",
+    "price":33000000,
+    "description": "Apple, 32GB, 128MGP",
+    "status":true,
+    "url_img":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg",
+    "category_id": 4
+  }, {
+    "name": "Samsung Galaxy S20 Ultra",
+    "price":22000000,
+    "description": "Samsung, 32GB, 128MGP",
+    "status":true,
+    "url_img":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg",
+    "category_id": 4
+  },{
+    "name": "Lenovo Ideapad Gamming 3",
+    "price":16000000,
+    "description": "Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...",
+    "status":true,
+    "url_img":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg",
+    "category_id": 1
+  },{
+    "name": "Ipad Pro 2021",
+    "price":28000000,
+    "description": "Apple, 64GB, 128GB",
+    "status":true,
+    "url_img":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg",
+    "category_id": 3
+  }, {
+    "name": "PC Vipper",
+    "price":12000000,
+    "description": "Intel, 16GB, 250GB SSD, I3 Gen12",
+    "status":true,
+    "url_img":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg",
+    "category_id": 2
+  }]
+}

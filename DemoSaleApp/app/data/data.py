@@ -1,6 +1,6 @@
 import json
 from app import db, app
-from app.models import Department, Employee, Customer
+from app.models import Department, Employee, Customer, Product, Category
 
 
 def read_data_phongban():
@@ -15,6 +15,14 @@ def read_data_nhanvien():
 
 def read_data_khachhang():
     with open('data_khachang.json', encoding='utf-8') as f:
+        return json.load(f)
+
+def read_data_product():
+    with open('data_product.json', encoding='utf-8') as f:
+        return json.load(f)
+
+def read_data_category():
+    with open('data_category.json', encoding='utf-8') as f:
         return json.load(f)
 
 
@@ -62,6 +70,34 @@ def add_data_khachhang(data, makh, tenkh, sodienthoai, diachi, email):
     with open('data_khachang.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False)
 
+def add_data_product(data, name, price, description, status, url_img, category_id):
+    pd = {
+        "name": name,
+        "price": price,
+        "description": description,
+        "status": status,
+        "url_img": url_img,
+        "category_id": category_id
+    }
+    # ghi dữ liệu tạm thời
+    data['listproduct'].append(pd)
+
+    # Ghi dữ liệu vào file.json
+    with open('data_product.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False)
+
+def add_data_category(data, name):
+    category = {
+        "name": name
+    }
+    # ghi dữ liệu tạm thời
+    data['listcategory'].append(category)
+
+    # Ghi dữ liệu vào file.json
+    with open('data_category.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False)
+
+
 
 def add_datapb_database():
     # Đọc dữ liệu
@@ -91,10 +127,31 @@ def add_datakh_database():
         db.session.add(customer)
         db.session.commit()
 
+def add_dataprodouct_database():
+    # Đọc dữ liệu
+    dataproduct = read_data_product()
+    for item in dataproduct['listproduct']:
+        product = Product(name=item["name"], price=item["price"],
+                          description=item["description"], status=item["status"], url_img=item["url_img"],
+                          category_id=item["category_id"])
+        db.session.add(product)
+        db.session.commit()
+
+def add_datacategory_database():
+    # Đọc dữ liệu
+    datacategory = read_data_category()
+    for item in datacategory['listcategory']:
+        category = Category(name=item["name"])
+        db.session.add(category)
+        db.session.commit()
+
+
 
 if __name__ == '__main__':
     with app.app_context():
         pass
+        add_datacategory_database()
+        add_dataprodouct_database()
         add_datapb_database()
         add_datanv_database()
         add_datakh_database()
