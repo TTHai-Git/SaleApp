@@ -2,6 +2,7 @@ from datetime import datetime
 from app import db, app
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
+from enum import Enum as UserEnum, Enum
 
 
 class Category(db.Model):
@@ -96,10 +97,30 @@ class Order_Details(db.Model):
     ngaylaphoadon = Column(DateTime, default=datetime.now(), nullable=False)
 
 
+# class UserRole(UserEnum):
+#     ADMIN = 1
+#     USER = 2
+
+
+class User(db.Model):
+    __tablename__ = "user"
+    name = Column(String(50), nullable=False)
+    username = Column(String(50), primary_key=True, nullable=False)
+    password = Column(String(255), nullable=False)
+    avatar = Column(String(255))
+    email = Column(String(100))
+    active = Column(Boolean, default=True)
+    joined_data = Column(DateTime, default=datetime.now())
+    #user_role = Column(UserEnum, default=UserRole.USER)
+
+    def __str__(self):
+        return self.name
+
+
 if __name__ == "__main__":
     with app.app_context():
         # pass
-        # db.create_all()
+        db.create_all()
         # db.drop_all()
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')

@@ -1,5 +1,6 @@
 from app import db, app
-from app.models import Category, Product
+from app.models import Category, Product, User
+import hashlib
 
 
 def loadnavbaritems():
@@ -14,6 +15,14 @@ def loadproducts(kw=None):
     else:
         return products
     return products
+
+
+def add_user(name, username, password, email, **kwargs):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+    user = User(name=name.strip(), username=username.strip(), password=password
+                , email=kwargs.get('email'), avatar=kwargs.get('avatar'))
+    db.session.add(user)
+    db.session.commit()
 
 
 if __name__ == "__main__":
