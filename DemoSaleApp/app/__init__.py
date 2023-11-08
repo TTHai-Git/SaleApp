@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import quote
 from flask_admin import Admin
@@ -11,5 +12,5 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
 
 admin = Admin(app=app, name="Quản Trị Bán Hàng", template_mode='bootstrap4')
-
+login = LoginManager(app=app)
 

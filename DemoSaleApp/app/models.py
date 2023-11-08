@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from flask_login import UserMixin
+
 from app import db, app
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -102,16 +105,17 @@ class Order_Details(db.Model):
 #     USER = 2
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    username = Column(String(50), primary_key=True, nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     avatar = Column(String(255))
-    email = Column(String(100))
+    email = Column(String(100), unique=True)
     active = Column(Boolean, default=True)
     joined_data = Column(DateTime, default=datetime.now())
-    #user_role = Column(UserEnum, default=UserRole.USER)
+    #user_role = Column(Enum(UserEnum), default=UserRole.USER)
 
     def __str__(self):
         return self.name
@@ -119,7 +123,7 @@ class User(db.Model):
 
 if __name__ == "__main__":
     with app.app_context():
-        # pass
+        #pass
         db.create_all()
         # db.drop_all()
         # c1 = Category(name='Laptop')
@@ -193,7 +197,7 @@ if __name__ == "__main__":
         # laptop.description = 'Lenovo, 16GB, 250GB SSD, I5 Gen12'
         # db.session.commit()
 
-        ods = Order_Details(makhachhangmua='KH_01', masanphammua=1, soluongmua=2, thanhtien=66000000,
-                            ghichu="Khách hàng đã thanh toán qua the. Yêu cầu giao hàng tận nợi")
-        db.session.add(ods)
-        db.session.commit()
+        # ods = Order_Details(makhachhangmua='KH_01', masanphammua=1, soluongmua=2, thanhtien=66000000,
+        #                     ghichu="Khách hàng đã thanh toán qua the. Yêu cầu giao hàng tận nợi")
+        # db.session.add(ods)
+        # db.session.commit()

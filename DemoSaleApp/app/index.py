@@ -1,6 +1,9 @@
 from flask import render_template, request, jsonify, url_for, redirect
-from app import dao, app
+from flask_login import login_user
+
+from app import dao, app,login
 from app.admin import *
+from app.models import User
 
 
 @app.route("/")
@@ -38,6 +41,21 @@ def common_response():
         'navbaritems': dao.loadnavbaritems()
     }
 
+
+@login.user_loader
+def get_user(user_id):
+    return dao.get_user_by_id(user_id)
+
+
+@app.route("/admin/login", methods=['POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = User.query.filter(username == username, password == password).first()
+        if user:
+            login_user(user=user)
+    return redirect("/admin")
 
 if __name__ == "__main__":
     app.run(debug=True)

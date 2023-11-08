@@ -1,3 +1,5 @@
+from flask_admin import BaseView, expose
+
 from app import app, db, admin
 
 from app.models import Category, Product, Employee, Customer, Department, Tag, Order_Details
@@ -115,6 +117,11 @@ class TagsView(ModelView):
     column_filters = ['name', 'id']
 
 
+class StatsView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/stats.html')
+
 admin.add_view(CategoryView(Category, db.session, name='Danh Mục'))
 admin.add_view(ProductView(Product, db.session, name='Sản Phẩm'))
 admin.add_view(EmployeeView(Employee, db.session, name='Nhân Viên'))
@@ -122,3 +129,4 @@ admin.add_view(CustomerView(Customer, db.session, name='Khách Hàng'))
 admin.add_view(DepartmentView(Department, db.session, name='Phòng Ban'))
 admin.add_view(TagsView(Tag, db.session, name='Khuyến Mãi'))
 admin.add_view(OrderDetailsView(Order_Details, db.session, name='Chi Tiết Đặt Hàng'))
+admin.add_view(StatsView(name="BÁO CÁO THỐNG KÊ"))
