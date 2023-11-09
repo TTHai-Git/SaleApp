@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, url_for, redirect
 from flask_login import login_user
 
-from app import dao, app,login
+from app import dao, app, login
 from app.admin import *
 from app.models import User
 
@@ -26,7 +26,7 @@ def user_register():
         try:
             if password.strip().__eq__(repeatpassword.strip()):
                 dao.add_user(name=name, username=username, password=password, email=email)
-                return redirect(url_for('trangchu'))
+                return redirect(url_for('user_login'))
             else:
                 err_msg = 'Mat Khau KHONG Khop!!!'
 
@@ -52,10 +52,27 @@ def admin_login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
-        user = User.query.filter(username == username, password == password).first()
+        user = User.query.filter(username=username, password=password).first()
         if user:
-            login_user(user=user)
+            login_user(user=user, remember=False)
     return redirect("/admin")
+
+
+@app.route("/login", methods=['POST', 'GET'])
+def user_login():
+    err_msg = ""
+    if request.method == 'POST':
+        username = request.form.get("username")
+        password = request.form.get("password")
+        try:
+            if dao.check_user(username, password):
+                return redirect(url_for('trangchu'))
+            else:
+                err_msg = 'ĐĂNG NHẬP THẤT BẠI VUI LÒNG KIỂM TRA LẠI UserName Hoặc PassWord!!!'
+        except Exception as ex:
+            err_msg = "ĐĂNG NHẬP THẤT BẠI NGƯỜI DÙNG %s KHÔNG TỒN " % username
+    return render_template('login.html', err_msg=err_msg)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -123,8 +123,8 @@ class User(db.Model, UserMixin):
 
 if __name__ == "__main__":
     with app.app_context():
-        #pass
-        db.create_all()
+        pass
+        #db.create_all()
         # db.drop_all()
         # c1 = Category(name='Laptop')
         # c2 = Category(name='PC')
