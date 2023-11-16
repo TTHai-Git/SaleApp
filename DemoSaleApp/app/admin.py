@@ -1,12 +1,18 @@
+from flask import redirect
 from flask_admin import BaseView, expose
+from flask_login import current_user, logout_user
 
 from app import app, db, admin
 
-from app.models import Category, Product, Employee, Customer, Department, Tag, Order_Details
+from app.models import Category, Product, Employee, Customer, Department, Tag, Order_Details, UserRole
 from flask_admin.contrib.sqla import ModelView
 
 
-class ProductView(ModelView):
+class AdminAuthenticated(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
+class ProductView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -32,8 +38,10 @@ class ProductView(ModelView):
     }
     form_excluded_columns = ['products']
 
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
 
-class CategoryView(ModelView):
+class CategoryView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -41,8 +49,11 @@ class CategoryView(ModelView):
     details_modal = True
     create_modal = True
 
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
 
-class OrderDetailsView(ModelView):
+
+class OrderDetailsView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -64,8 +75,11 @@ class OrderDetailsView(ModelView):
         'ghichu': "Ghi Chú"
     }
 
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
 
-class CustomerView(ModelView):
+
+class CustomerView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -76,7 +90,10 @@ class CustomerView(ModelView):
     column_filters = ['tenkhachhang', 'makhachhang', 'sodienthoai']
     column_searchable_list = ['makhachhang']
 
-class EmployeeView(ModelView):
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
+
+class EmployeeView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -87,7 +104,10 @@ class EmployeeView(ModelView):
     column_searchable_list = ['tennhanvien']
     column_filters = ['tennhanvien', 'manhanvien', 'sodienthoai']
 
-class DepartmentView(ModelView):
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
+
+class DepartmentView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -99,7 +119,10 @@ class DepartmentView(ModelView):
     column_searchable_list = ['tenphongban']
     column_filters = ['tenphongban', 'maphongban']
 
-class TagsView(ModelView):
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
+
+class TagsView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
     can_export = True
@@ -116,11 +139,24 @@ class TagsView(ModelView):
     column_searchable_list = ['name']
     column_filters = ['name', 'id']
 
+    # def is_accessible(self):
+    #     return current_user.is_authenticated
+
 
 class StatsView(BaseView):
     @expose('/')
     def index(self):
         return self.render('admin/stats.html')
+
+class LogoutView(BaseView):
+    @expose('/')
+    def index(self):
+        logout_user()
+
+        return redirect('/admin')
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 admin.add_view(CategoryView(Category, db.session, name='Danh Mục'))
 admin.add_view(ProductView(Product, db.session, name='Sản Phẩm'))
@@ -129,4 +165,5 @@ admin.add_view(CustomerView(Customer, db.session, name='Khách Hàng'))
 admin.add_view(DepartmentView(Department, db.session, name='Phòng Ban'))
 admin.add_view(TagsView(Tag, db.session, name='Khuyến Mãi'))
 admin.add_view(OrderDetailsView(Order_Details, db.session, name='Chi Tiết Đặt Hàng'))
-admin.add_view(StatsView(name="BÁO CÁO THỐNG KÊ"))
+admin.add_view(StatsView(name='BÁO CÁO THỐNG KÊ'))
+admin.add_view(LogoutView(name='ĐĂNG XUẤT'))

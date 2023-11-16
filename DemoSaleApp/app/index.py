@@ -9,13 +9,14 @@ from app.models import User
 @app.route("/")
 def trangchu():
     kw = request.args.get("kw")
-    products = dao.loadproducts(kw)
-    return render_template('index.html', products=products)
+    cate_id = request.args.get('cate_id')
+    categories = dao.loadcategories()
+    products = dao.loadproducts(kw, cate_id)
+    return render_template('index.html', products=products, categories=categories)
 
 
 @app.route('/register', methods=['get', 'post'])
 def user_register():
-    navbaritems = dao.loadnavbaritems()
     err_msg = ""
     if request.method.__eq__('POST'):
         name = request.form.get('name')
@@ -35,11 +36,11 @@ def user_register():
     return render_template('register.html', err_msg=err_msg)
 
 
-@app.context_processor
-def common_response():
-    return {
-        'navbaritems': dao.loadnavbaritems()
-    }
+# @app.context_processor
+# def common_response():
+#     return {
+#         'categories': dao.loadcategories()
+#     }
 
 
 @login.user_loader
@@ -47,12 +48,12 @@ def get_user(user_id):
     return dao.get_user_by_id(user_id)
 
 
-@app.route("/admin/login", methods=['POST'])
+@app.route("/admin-login", methods=['POST'])
 def admin_login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
-        user = User.query.filter(username=username, password=password).first()
+        user = dao.get_user(username, password)
         if user:
             login_user(user=user, remember=False)
     return redirect("/admin")
@@ -64,8 +65,9 @@ def user_login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
+        user = dao.get_user(username,password)
         try:
-            if dao.check_user(username, password):
+            if user:
                 return redirect(url_for('trangchu'))
             else:
                 err_msg = 'ĐĂNG NHẬP THẤT BẠI VUI LÒNG KIỂM TRA LẠI UserName Hoặc PassWord!!!'

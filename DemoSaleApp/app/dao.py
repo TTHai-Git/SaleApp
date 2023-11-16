@@ -1,45 +1,39 @@
 from app import db, app
 from app.models import Category, Product, User
 import hashlib
-import bcrypt
 
 
-def loadnavbaritems():
-    navbaritems = Category.query.all()
-    return navbaritems
+def loadcategories():
+    return Category.query.all()
 
 
-def loadproducts(kw=None):
-    products = Product.query.all()
+def loadproducts(kw=None, cate_id=None):
+    products = Product.query
     if kw:
-        products = [p for p in products if p.name.lower().find(kw.lower()) >= 0]
+        products = products.filter(Product.name.contains(kw))
+    if cate_id:
+        products = products.filter(Product.category_id.__eq__(cate_id))
     else:
-        return products
-    return products
+        return products.all()
+    return products.all()
 
 
 def add_user(name, username, password, email, **kwargs):
-    # password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-    salt = bcrypt.gensalt(rounds=12)
-    hashed_password = bcrypt.hashpw(password.strip().encode('utf-8'), salt)# HashPassword then cover tostring => string_password = user.password.decode('utf-8')
-    user = User(name=name.strip(), username=username.strip(), password=hashed_password
-                , email=kwargs.get('email'), avatar=kwargs.get('avatar'))
-    db.session.add(user)
+    db.session.add(User(name=name.strip(), username=username.strip(),
+                        password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()), email=email.strip()))
     db.session.commit()
-
-
-def check_user(username, password):
-    return bcrypt.checkpw(password.strip().encode('utf8'),
-                          User.query.filter_by(username=username).first().password.encode('utf8'))
 
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 
-def get_user(username,password):
-    password
+
+def get_user(username, password):
+    return User.query.filter(User.username.__eq__(username),
+                             User.password.__eq__(
+                                 str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()))).first()
+
 
 if __name__ == "__main__":
     with app.app_context():
-       pass
-
+        pass

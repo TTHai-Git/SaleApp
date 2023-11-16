@@ -1,35 +1,33 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{url_for('trangchu')}}">Logo</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+        <a class="navbar-brand" href="#">BÁN HÀNG TRỰC TUYẾN</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="mynavbar">
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
-                {% for item in navbaritems %}
-                <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        {{item.name}}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Trang chủ</a>
+                </li>
+                {% for c in categories %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/?cate_id={{c.id}}">{{ c.name }}</a>
+                </li>
                 {% endfor %}
-                <div class="dropdown">
-                    <a class="nav-link text-danger" href="{{url_for('user_register')}}">Đăng Ký Tài Khoản</a>
-                </div>
-                 <div class="dropdown">
-                    <a class="nav-link text-danger" href="{{url_for('user_login')}}">Đăng Nhập Người Dùng</a>
-                </div>
+                <li>
+                    <a class="nav-link text-info" href="{{url_for('user_login')}}">Đăng Nhập </a>
+                </li>
+                <li>
+                    <a class="nav-link text-info" href="{{url_for('user_register')}}">Đăng Ký Người Dùng </a>
+                </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="text" name="kw" placeholder="Nhập Tên Sản Phẩm Cần Tìm Kiếm...">
-                <button class="btn btn-primary" type="submit">Search</button>
+            <form class="d-flex" method="get" action="/">
+                <input class="form-control me-2" type="text" name="kw" placeholder="Nhập từ khóa...">
+                <button class="btn btn-primary" type="submit">Tìm</button>
             </form>
         </div>
     </div>
 </nav>
+
+
+
