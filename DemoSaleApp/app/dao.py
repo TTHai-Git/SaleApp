@@ -7,15 +7,24 @@ def loadcategories():
     return Category.query.all()
 
 
-def loadproducts(kw=None, cate_id=None):
-    products = Product.query
+def loadproducts(kw=None, cate_id=None, page=None):
+    products = Product.query.filter(Product.status.__eq__(True))
     if kw:
         products = products.filter(Product.name.contains(kw))
+
     if cate_id:
         products = products.filter(Product.category_id.__eq__(cate_id))
-    else:
-        return products.all()
+    if page:
+        page = int(page)
+        page_size = app.config['PAGE_SIZE']
+        start = (page - 1) * page_size
+
+        return products.slice(start, start + page_size)
     return products.all()
+
+
+def count_products():
+    return Product.query.filter(Product.status.__eq__(True)).count()
 
 
 def add_user(name, username, password, email, **kwargs):

@@ -1,3 +1,5 @@
+import math
+
 from flask import render_template, request, jsonify, url_for, redirect
 from flask_login import login_user
 
@@ -10,9 +12,13 @@ from app.models import User
 def trangchu():
     kw = request.args.get("kw")
     cate_id = request.args.get('cate_id')
+    page = request.args.get('page')
     categories = dao.loadcategories()
-    products = dao.loadproducts(kw, cate_id)
-    return render_template('index.html', products=products, categories=categories)
+    count_products = dao.count_products()
+    products = dao.loadproducts(kw, cate_id, page)
+
+    return render_template('index.html', products=products, categories=categories,
+                           pages=math.ceil(count_products/app.config['PAGE_SIZE']))
 
 
 @app.route('/register', methods=['get', 'post'])
