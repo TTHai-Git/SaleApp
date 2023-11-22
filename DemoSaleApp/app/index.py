@@ -1,11 +1,10 @@
-import math
+import math, untils
 
-from flask import render_template, request, jsonify, url_for, redirect
+from flask import render_template, request, url_for, session, jsonify
 from flask_login import login_user
 
 from app import dao, app, login
 from app.admin import *
-from app.models import User
 
 
 @app.route("/")
@@ -13,12 +12,12 @@ def trangchu():
     kw = request.args.get("kw")
     cate_id = request.args.get('cate_id')
     page = request.args.get('page')
-    categories = dao.loadcategories()
+    #categories = dao.loadcategories()
     count_products = dao.count_products()
     products = dao.loadproducts(kw, cate_id, page)
 
-    return render_template('index.html', products=products, categories=categories,
-                           pages=math.ceil(count_products/app.config['PAGE_SIZE']))
+    return render_template('index.html', products=products,
+                           pages=math.ceil(count_products / app.config['PAGE_SIZE']))
 
 
 @app.route('/register', methods=['get', 'post'])
@@ -42,11 +41,12 @@ def user_register():
     return render_template('register.html', err_msg=err_msg)
 
 
-# @app.context_processor
-# def common_response():
-#     return {
-#         'categories': dao.loadcategories()
-#     }
+@app.context_processor
+def common_response():
+    return {
+        'categories': dao.loadcategories(),
+        'cart': untils.count_cart(session.get('cart'))
+    }
 
 
 @login.user_loader
@@ -71,7 +71,7 @@ def user_login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
-        user = dao.get_user(username,password)
+        user = dao.get_user(username, password)
         try:
             if user:
                 return redirect(url_for('trangchu'))
@@ -81,6 +81,55 @@ def user_login():
             err_msg = "ĐĂNG NHẬP THẤT BẠI NGƯỜI DÙNG %s KHÔNG TỒN " % username
     return render_template('login.html', err_msg=err_msg)
 
+
+@app.route('/api/cart', methods=['post'])
+def add_to_cart():
+    """
+    {
+        "cart":{
+            "1":{
+                "id": "1",
+                "name": "ABC",
+                "price": 12,
+                "quantity": 2
+            }, "2": {
+                "id": "2",
+                "name": "ABC",
+                "price": 12,
+                "quantity": 1
+            }
+        }
+    }
+    :return:
+    """
+    data = request.json
+
+    cart = session.get('cart')
+    if cart is None:
+        cart = {}
+    id = str(data.get('id'))
+    if id in cart:  # sản phẩm đã có trong giỏ chưa
+        cart[id]['quantity'] += 1  # tăng sl sản phẩm lên 1
+    else:  # sản phẩm chưa có trong giỏ
+        cart[id] = {
+            "id": id,
+            "name": data.get('name'),
+            "price": data.get('price'),
+            "quantity": 1
+        }
+    session['cart'] = cart
+    print(cart)
+
+    # return jsonify({
+    #     "total_amount": 100,
+    #     "total_quantity": 10,
+    # })
+
+    return untils.count_cart(cart)
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
