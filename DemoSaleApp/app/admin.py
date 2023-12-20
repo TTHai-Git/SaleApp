@@ -12,6 +12,7 @@ class AdminAuthenticated(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+
 class ProductView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
@@ -40,6 +41,7 @@ class ProductView(AdminAuthenticated):
 
     # def is_accessible(self):
     #     return current_user.is_authenticated
+
 
 class CategoryView(AdminAuthenticated):
     column_display_pk = True
@@ -93,6 +95,7 @@ class CustomerView(AdminAuthenticated):
     # def is_accessible(self):
     #     return current_user.is_authenticated
 
+
 class EmployeeView(AdminAuthenticated):
     column_display_pk = True
     can_view_details = True
@@ -106,6 +109,7 @@ class EmployeeView(AdminAuthenticated):
 
     # def is_accessible(self):
     #     return current_user.is_authenticated
+
 
 class DepartmentView(AdminAuthenticated):
     column_display_pk = True
@@ -121,6 +125,7 @@ class DepartmentView(AdminAuthenticated):
 
     # def is_accessible(self):
     #     return current_user.is_authenticated
+
 
 class TagsView(AdminAuthenticated):
     column_display_pk = True
@@ -148,6 +153,7 @@ class StatsView(BaseView):
     def index(self):
         return self.render('admin/stats.html')
 
+
 class LogoutView(BaseView):
     @expose('/')
     def index(self):
@@ -158,6 +164,13 @@ class LogoutView(BaseView):
     def is_accessible(self):
         return current_user.is_authenticated
 
+
+class HomePageView(BaseView):
+    @expose('/')
+    def index(self):
+        return redirect('/')
+
+
 admin.add_view(CategoryView(Category, db.session, name='Danh Mục'))
 admin.add_view(ProductView(Product, db.session, name='Sản Phẩm'))
 admin.add_view(EmployeeView(Employee, db.session, name='Nhân Viên'))
@@ -167,3 +180,4 @@ admin.add_view(TagsView(Tag, db.session, name='Khuyến Mãi'))
 admin.add_view(OrderDetailsView(Order_Details, db.session, name='Chi Tiết Đặt Hàng'))
 admin.add_view(StatsView(name='BÁO CÁO THỐNG KÊ'))
 admin.add_view(LogoutView(name='ĐĂNG XUẤT'))
+admin.add_view(HomePageView(name='Trang Chủ'))

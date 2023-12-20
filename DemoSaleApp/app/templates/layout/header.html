@@ -14,9 +14,18 @@
                     <a class="nav-link" href="/?cate_id={{c.id}}">{{ c.name }}</a>
                 </li>
                 {% endfor %}
+                {% if current_user.is_authenticated %}
                 <li>
-                    <a class="nav-link text-info" href="{{url_for('user_login')}}">Đăng Nhập </a>
+                    <a class="nav-link text-info" href="#">{{current_user.username}} </a>
                 </li>
+                <li>
+                    <a class="nav-link text-info" href="/admin">ĐĂNG XUẤT </a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="nav-link text-info" href="{{url_for('login')}}">ĐĂNG NHẬP </a>
+                </li>
+                {% endif %}
                 <li>
                     <a class="nav-link text-info" href="{{url_for('user_register')}}">Đăng Ký Người Dùng </a>
                 </li>

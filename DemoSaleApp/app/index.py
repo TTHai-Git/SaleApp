@@ -1,9 +1,9 @@
-import math, untils
+import math
 
 from flask import render_template, request, url_for, session, jsonify
 from flask_login import login_user
 
-from app import dao, app, login
+from app import dao, app, login, untils
 from app.admin import *
 
 
@@ -12,7 +12,7 @@ def trangchu():
     kw = request.args.get("kw")
     cate_id = request.args.get('cate_id')
     page = request.args.get('page')
-    #categories = dao.loadcategories()
+    # categories = dao.loadcategories()
     count_products = dao.count_products()
     products = dao.loadproducts(kw, cate_id, page)
 
@@ -54,19 +54,8 @@ def get_user(user_id):
     return dao.get_user_by_id(user_id)
 
 
-@app.route("/admin-login", methods=['POST'])
-def admin_login():
-    if request.method == 'POST':
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = dao.get_user(username, password)
-        if user:
-            login_user(user=user, remember=False)
-    return redirect("/admin")
-
-
 @app.route("/login", methods=['POST', 'GET'])
-def user_login():
+def login():
     err_msg = ""
     if request.method == 'POST':
         username = request.form.get("username")
@@ -74,7 +63,11 @@ def user_login():
         user = dao.get_user(username, password)
         try:
             if user:
-                return redirect(url_for('trangchu'))
+                login_user(user=user)
+                if current_user.user_role == UserRole.ADMIN:
+                    return redirect('/admin')
+                else:
+                    return redirect('/')
             else:
                 err_msg = 'ĐĂNG NHẬP THẤT BẠI VUI LÒNG KIỂM TRA LẠI UserName Hoặc PassWord!!!'
         except Exception as ex:
@@ -127,9 +120,38 @@ def add_to_cart():
 
     return untils.count_cart(cart)
 
+
+@app.route('/api/cart/<product_id>', methods=['put'])
+def update_cart(product_id):
+    cart = session.get('cart')
+    if cart and product_id in cart:
+        quantity = request.json.get('quantity')
+        cart[product_id]['quantity'] = int(quantity)
+    session['cart'] = cart
+    return jsonify(untils.count_cart(cart))
+
+
+@app.route('/api/cart/<product_id>', methods=['delete'])
+def delete_cart(product_id):
+    cart = session.get('cart')
+    if cart and product_id in cart:
+        del cart[product_id]
+
+    session['cart'] = cart
+
+    return jsonify(untils.count_cart(cart))
+
+
+@app.route('/cart', methods=['post'])
+def clear_cart():
+    session.pop('cart')
+    return redirect('/cart')
+
+
 @app.route('/cart')
 def cart():
     return render_template('cart.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

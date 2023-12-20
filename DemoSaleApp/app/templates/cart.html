@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% block content %}
 <h1 class="text-center text-info mt-1">GIỎ HÀNG</h1>
-{% if 'cart' in session %}
+{% if 'cart' in session and cart.total_quantity > 0 %}
 <table class="table">
     <tr>
         <th>Mã Sản Phẩm</th>
@@ -11,26 +11,35 @@
         <th></th>
     </tr>
     {% for c in session['cart'].values() %}
-    <tr>
+    <tr id="product{{c.id}}">
         <td>{{c.id}}</td>
         <td>{{c.name}}</td>
-        <td>{{c.price}}</td>
+        <td>{{"{:,.0f}".format(c.price)}} VNĐ</td>
         <td>
-            <input class="form-control" type="number" value="{{c.quantity}}"/>
+            <input type="number" value="{{ c.quantity }}" onblur="updateCart({{c.id}}, this)" class="form-control"/>
         </td>
         <td>
-            <button class="btn btn-danger">&times</button>
+            <button class="btn btn-danger" onclick="deleteCart({{ c.id }}, this)">&times;</button>
         </td>
     </tr>
     {% endfor %}
 </table>
 <div class="alert alert-info">
-    <h3>Tổng Tiền: {{cart.total_amount}} VNĐ</h3>
-    <h3>Tổng Sản Phẩm: {{cart.total_quantity}} </h3>
+    <h3>Tổng Tiền: <span id="total-amount">{{"{:,.0f}".format(cart.total_amount)}} </span></h3>
+    <h3>Tổng Sản Phẩm: <span class="cart-counter">{{cart.total_quantity}} </span> </h3>
 </div>
 <div>
+    {% if current_user.is_authenticated %}
     <button class="btn btn-success m-1" type="submit">THANH TOÁN</button>
+    <form action="{{url_for(('clear_cart'))}}" method="post">
+          <button class="btn btn-danger m-1" type="submit">HỦY</button>
+    </form>
+    {% else %}
+    <p>Vui lòng <a href="/login?next=/cart">đăng nhập</a>để thanh toán</p>
+    {% endif %}
 </div>
+
+
 {% else %}
 <div class="alert alert-warning">KHÔNG CÓ SẢN PHẨM NÀO TRONG GIỎ HÀNG</div>
 {% endif %}
