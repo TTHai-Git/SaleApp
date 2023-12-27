@@ -16,18 +16,19 @@
                 {% endfor %}
                 {% if current_user.is_authenticated %}
                 <li>
-                    <a class="nav-link text-info" href="#">{{current_user.username}} </a>
+                    <a class="nav-link text-info" href="#"><img src="{{current_user.avatar}}" class="rounded" width="25"/>{{current_user.username}}
+                    </a>
                 </li>
                 <li>
-                    <a class="nav-link text-info" href="/admin">ĐĂNG XUẤT </a>
+                    <a class="nav-link text-info" href="/logout">ĐĂNG XUẤT </a>
                 </li>
                 {% else %}
                 <li>
-                    <a class="nav-link text-info" href="{{url_for('login')}}">ĐĂNG NHẬP </a>
+                    <a class="nav-link text-info" href="/login">ĐĂNG NHẬP </a>
                 </li>
                 {% endif %}
                 <li>
-                    <a class="nav-link text-info" href="{{url_for('user_register')}}">Đăng Ký Người Dùng </a>
+                    <a class="nav-link text-info" href="/register">Đăng Ký Người Dùng </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-danger" href="{{url_for('cart')}}">&#128722; Giỏ hàng <span

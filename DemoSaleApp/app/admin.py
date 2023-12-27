@@ -2,7 +2,7 @@ from flask import redirect
 from flask_admin import BaseView, expose
 from flask_login import current_user, logout_user
 
-from app import app, db, admin
+from app import app, db, admin, dao
 
 from app.models import Category, Product, Employee, Customer, Department, Tag, Order_Details, UserRole
 from flask_admin.contrib.sqla import ModelView
@@ -151,7 +151,7 @@ class TagsView(AdminAuthenticated):
 class StatsView(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/stats.html')
+        return self.render('admin/stats.html', stats=dao.count_products())
 
 
 class LogoutView(BaseView):

@@ -12,7 +12,6 @@ def trangchu():
     kw = request.args.get("kw")
     cate_id = request.args.get('cate_id')
     page = request.args.get('page')
-    # categories = dao.loadcategories()
     count_products = dao.count_products()
     products = dao.loadproducts(kw, cate_id, page)
 
@@ -29,10 +28,11 @@ def user_register():
         password = request.form.get('password')
         repeatpassword = request.form.get('repeatpassword')
         email = request.form.get('email')
+        avatar = request.files.get('avatar')
         try:
             if password.strip().__eq__(repeatpassword.strip()):
-                dao.add_user(name=name, username=username, password=password, email=email)
-                return redirect(url_for('user_login'))
+                dao.add_user(name=name, username=username, password=password, email=email, avatar=avatar)
+                return redirect('/login')
             else:
                 err_msg = 'Mat Khau KHONG Khop!!!'
 
@@ -67,12 +67,19 @@ def login():
                 if current_user.user_role == UserRole.ADMIN:
                     return redirect('/admin')
                 else:
-                    return redirect('/')
+                    Next = request.args.get('next')
+                    return redirect('/' if Next is None else Next)
             else:
                 err_msg = 'ĐĂNG NHẬP THẤT BẠI VUI LÒNG KIỂM TRA LẠI UserName Hoặc PassWord!!!'
         except Exception as ex:
             err_msg = "ĐĂNG NHẬP THẤT BẠI NGƯỜI DÙNG %s KHÔNG TỒN " % username
     return render_template('login.html', err_msg=err_msg)
+
+
+@app.route("/logout", methods=['GET'])
+def logout():
+    logout_user()
+    return redirect('/login')
 
 
 @app.route('/api/cart', methods=['post'])

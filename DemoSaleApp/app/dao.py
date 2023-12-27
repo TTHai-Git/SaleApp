@@ -1,3 +1,6 @@
+import cloudinary.uploader
+from sqlalchemy import func
+
 from app import db, app
 from app.models import Category, Product, User
 import hashlib
@@ -27,9 +30,16 @@ def count_products():
     return Product.query.filter(Product.status.__eq__(True)).count()
 
 
-def add_user(name, username, password, email, **kwargs):
-    db.session.add(User(name=name.strip(), username=username.strip(),
-                        password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()), email=email.strip()))
+def add_user(name, username, password, email, avatar, **kwargs):
+    u = User(name=name.strip(), username=username.strip(),
+             password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()), email=email.strip(),
+             avatar=avatar)
+
+    if avatar:
+        res = cloudinary.uploader.upload(avatar)
+        u.avatar = res['secure_url']
+
+    db.session.add(u)
     db.session.commit()
 
 
@@ -43,6 +53,11 @@ def get_user(username, password):
                                  str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()))).first()
 
 
+def count_products():
+    return db.session.query(Category.id, Category.name, func.count(Product.id)).\
+        join(Product, Product.category_id == Category.id).group_by(Category.id).all()
+
+
 if __name__ == "__main__":
     with app.app_context():
-        pass
+        print(count_products())
