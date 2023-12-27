@@ -151,7 +151,7 @@ class TagsView(AdminAuthenticated):
 class StatsView(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/stats.html', stats=dao.count_products())
+        return self.render('admin/stats.html', stats=dao.stats_products())
 
 
 class LogoutView(BaseView):

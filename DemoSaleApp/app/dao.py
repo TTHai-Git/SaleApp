@@ -53,7 +53,7 @@ def get_user(username, password):
                                  str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()))).first()
 
 
-def count_products():
+def stats_products():
     return db.session.query(Category.id, Category.name, func.count(Product.id)).\
         join(Product, Product.category_id == Category.id).group_by(Category.id).all()
 

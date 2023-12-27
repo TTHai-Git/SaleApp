@@ -16,7 +16,7 @@ def trangchu():
     products = dao.loadproducts(kw, cate_id, page)
 
     return render_template('index.html', products=products,
-                           pages=math.ceil(count_products / app.config['PAGE_SIZE']))
+                           pages=math.ceil(count_products/app.config['PAGE_SIZE']))
 
 
 @app.route('/register', methods=['get', 'post'])
