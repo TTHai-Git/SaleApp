@@ -1,8 +1,9 @@
 import cloudinary.uploader
+from flask_login import current_user
 from sqlalchemy import func
 
 from app import db, app
-from app.models import Category, Product, User
+from app.models import Category, Product, User, Receipt, ReceiptDetails
 import hashlib
 
 
@@ -54,10 +55,21 @@ def get_user(username, password):
 
 
 def stats_products():
-    return db.session.query(Category.id, Category.name, func.count(Product.id)).\
+    return db.session.query(Category.id, Category.name, func.count(Product.id)). \
         join(Product, Product.category_id == Category.id).group_by(Category.id).all()
+
+
+def add_receipt(cart):
+    if cart:
+        receipt = Receipt(user=current_user)
+        db.session.add(receipt)
+        for c in cart.values():
+            d = ReceiptDetails(quantity=c['quantity'], unit_price=c['price'], product_id=c['id'], receipt=receipt)
+            db.session.add(d)
+        db.session.commit()
 
 
 if __name__ == "__main__":
     with app.app_context():
-        print(count_products())
+        pass
+        # print(count_products())

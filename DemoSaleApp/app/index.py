@@ -1,9 +1,8 @@
 import math
+from flask import render_template, request, session, jsonify
+from flask_login import login_user, login_required
 
-from flask import render_template, request, url_for, session, jsonify
-from flask_login import login_user
-
-from app import dao, app, login, untils
+from app import login, untils
 from app.admin import *
 
 
@@ -16,7 +15,7 @@ def trangchu():
     products = dao.loadproducts(kw, cate_id, page)
 
     return render_template('index.html', products=products,
-                           pages=math.ceil(count_products/app.config['PAGE_SIZE']))
+                           pages=math.ceil(count_products / app.config['PAGE_SIZE']))
 
 
 @app.route('/register', methods=['get', 'post'])
@@ -147,6 +146,19 @@ def delete_cart(product_id):
     session['cart'] = cart
 
     return jsonify(untils.count_cart(cart))
+
+
+@app.route('/api/pay', methods=['post'])
+@login_required
+def pay():
+    try:
+        dao.add_receipt(session.get('cart'))
+    except:
+
+        return jsonify({'status': 500, "err_msg": "..."})
+    else:
+        del session['cart']
+        return jsonify({'status': 200})
 
 
 @app.route('/cart', methods=['post'])

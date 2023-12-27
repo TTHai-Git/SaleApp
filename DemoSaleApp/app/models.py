@@ -9,6 +9,29 @@ from sqlalchemy.orm import relationship, backref
 import enum
 
 
+class UserRole(enum.Enum):
+    ADMIN = 1
+    USER = 2
+
+
+class User(db.Model, UserMixin):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
+    avatar = Column(String(255),
+                    default='https://res.cloudinary.com/dh5jcbzly/image/upload/v1703666812/hme7xdtwowv4rloj1dzq.jpg')
+    email = Column(String(100), unique=True)
+    active = Column(Boolean, default=True)
+    joined_data = Column(DateTime, default=datetime.now())
+    user_role = Column(Enum(UserRole), default=UserRole.USER)
+    receipts = relationship('Receipt', backref='user', lazy=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Category(db.Model):
     __tablename__ = "category"
 
@@ -38,7 +61,7 @@ class Product(db.Model):
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
-    order_products = db.relationship('Order_Details', backref='product', lazy=True)
+    receipt_details = relationship('ReceiptDetails', backref='product', lazy=True)
 
     def __str__(self):
         return self.name
@@ -84,92 +107,78 @@ class Customer(db.Model):
     sodienthoai = Column(String(10), nullable=True, default=None, unique=True)
     diachi = Column(String(255), nullable=True, default=None, unique=True)
     email = Column(String(100), nullable=True, unique=True, default=None)
-    order_products = db.relationship('Order_Details', backref='customer', lazy=True)
 
     def __str__(self):
         return self.tenkhachhang
 
 
-class Order_Details(db.Model):
-    __tablename__ = "order_details"
+class BaseModel(db.Model):
+    __abstract__ = True
+
     id = Column(Integer, primary_key=True, autoincrement=True)
-    makhachhangmua = Column(String(10), ForeignKey('customer.makhachhang'))
-    masanphammua = Column(Integer, ForeignKey('product.id'))
-    soluongmua = Column(Integer, nullable=False)
-    thanhtien = Column(Float, nullable=False)
-    ghichu = Column(String(255), nullable=True, default="None")
-    ngaylaphoadon = Column(DateTime, default=datetime.now(), nullable=False)
-
-
-class UserRole(enum.Enum):
-    ADMIN = 1
-    USER = 2
-
-
-class User(db.Model, UserMixin):
-    __tablename__ = "user"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
-    username = Column(String(50), nullable=False, unique=True)
-    password = Column(String(255), nullable=False)
-    avatar = Column(String(255),
-                    default='https://res.cloudinary.com/dh5jcbzly/image/upload/v1703666812/hme7xdtwowv4rloj1dzq.jpg')
-    email = Column(String(100), unique=True)
     active = Column(Boolean, default=True)
-    joined_data = Column(DateTime, default=datetime.now())
-    user_role = Column(Enum(UserRole), default=UserRole.USER)
+    created_date = Column(DateTime, default=datetime.now())
 
-    def __str__(self):
-        return self.name
+
+class Receipt(BaseModel):
+    user_id = Column(Integer, ForeignKey(User.id), nullable=True)
+    receipt_details = relationship('ReceiptDetails', backref='receipt', lazy=True)
+
+
+class ReceiptDetails(BaseModel):
+    quantity = Column(Integer, default=0)
+    unit_price = Column(Float, default=0)
+    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
 
 
 if __name__ == "__main__":
     with app.app_context():
         # pass
-        db.drop_all()
-
+        # db.drop_all()
+        #
         db.create_all()
-        c1 = Category(name='Laptop')
-        c2 = Category(name='PC')
-        c3 = Category(name='Tablet')
-        c4 = Category(name='Mobile')
-
-        db.session.add_all([c1, c2, c3, c4])
-        db.session.commit()
-
-        p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
-                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-                     category_id=4)
-        p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
-                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-                     category_id=4)
-        p3 = Product(name='Lenovo Ideapad Gamming 3', price=16000000,
-                     description='Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...',
-                     status=True,
-                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-                     category_id=1)
-        p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
-                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-                     category_id=3)
-        p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
-                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-                     category_id=2)
-
-        db.session.add_all([p1, p2, p3, p4, p5])
-        db.session.commit()
-
-        tag1 = Tag(id='pmt', name='promotion', description='khuyến mãi')
-        tag2 = Tag(id='new', name='new', description='Hàng Mới Nhập Khẩu')
-
-        db.session.add_all([tag1, tag2])
-        db.session.commit()
-
-        u1 = User(name='User', username='user', password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
-        u2 = User(name='Admin', username='admin',
-                  password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), user_role=UserRole.ADMIN)
-
-        db.session.add_all([u1, u2])
-        db.session.commit()
+        # c1 = Category(name='Laptop')
+        # c2 = Category(name='PC')
+        # c3 = Category(name='Tablet')
+        # c4 = Category(name='Mobile')
+        #
+        # db.session.add_all([c1, c2, c3, c4])
+        # db.session.commit()
+        #
+        # p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+        #              category_id=4)
+        # p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+        #              category_id=4)
+        # p3 = Product(name='Lenovo Ideapad Gamming 3', price=16000000,
+        #              description='Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...',
+        #              status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+        #              category_id=1)
+        # p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+        #              category_id=3)
+        # p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
+        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+        #              category_id=2)
+        #
+        # db.session.add_all([p1, p2, p3, p4, p5])
+        # db.session.commit()
+        #
+        # tag1 = Tag(id='pmt', name='promotion', description='khuyến mãi')
+        # tag2 = Tag(id='new', name='new', description='Hàng Mới Nhập Khẩu')
+        #
+        # db.session.add_all([tag1, tag2])
+        # db.session.commit()
+        #
+        # u1 = User(name='User', username='user', password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
+        # u2 = User(name='Admin', username='admin',
+        #           password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), user_role=UserRole.ADMIN)
+        #
+        # db.session.add_all([u1, u2])
+        # db.session.commit()
 
         # Thêm dữ liêu từ model ánh xạ xuống database
 

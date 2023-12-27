@@ -4,7 +4,7 @@ from flask_login import current_user, logout_user
 
 from app import app, db, admin, dao
 
-from app.models import Category, Product, Employee, Customer, Department, Tag, Order_Details, UserRole
+from app.models import Category, Product, Employee, Customer, Department, Tag, UserRole
 from flask_admin.contrib.sqla import ModelView
 
 
@@ -50,32 +50,6 @@ class CategoryView(AdminAuthenticated):
     edit_modal = True
     details_modal = True
     create_modal = True
-
-    # def is_accessible(self):
-    #     return current_user.is_authenticated
-
-
-class OrderDetailsView(AdminAuthenticated):
-    column_display_pk = True
-    can_view_details = True
-    can_export = True
-    edit_modal = True
-    details_modal = True
-    create_modal = True
-
-    column_list = ('id', 'makhachhangmua', 'customer', 'masanphammua', 'product', 'soluongmua', 'thanhtien',
-                   'ngaylaphoadon', 'ghichu')
-    column_labels = {
-        'id': "STT",
-        'makhachhangmua': "Mã Khách Hàng Mua",
-        'customer': "Tên Khách Hàng",
-        'masanphammua': "Mã Sản Phẩm Mua",
-        'product': "Tên Sản Phẩm Mua",
-        'soluongmua': "Số Lượng Mua",
-        'thanhtien': "Thành Tiền",
-        'ngaylaphoadon': "Ngày Tạo Hóa Đơn",
-        'ghichu': "Ghi Chú"
-    }
 
     # def is_accessible(self):
     #     return current_user.is_authenticated
@@ -177,7 +151,6 @@ admin.add_view(EmployeeView(Employee, db.session, name='Nhân Viên'))
 admin.add_view(CustomerView(Customer, db.session, name='Khách Hàng'))
 admin.add_view(DepartmentView(Department, db.session, name='Phòng Ban'))
 admin.add_view(TagsView(Tag, db.session, name='Khuyến Mãi'))
-admin.add_view(OrderDetailsView(Order_Details, db.session, name='Chi Tiết Đặt Hàng'))
 admin.add_view(StatsView(name='BÁO CÁO THỐNG KÊ'))
 admin.add_view(LogoutView(name='ĐĂNG XUẤT'))
 admin.add_view(HomePageView(name='Trang Chủ'))
