@@ -3,7 +3,7 @@ from flask_login import current_user
 from sqlalchemy import func
 
 from app import db, app
-from app.models import Category, Product, User, Receipt, ReceiptDetails
+from app.models import Category, Product, User, Receipt, ReceiptDetails, Comment
 import hashlib
 
 
@@ -56,7 +56,24 @@ def get_user(username, password):
 
 def stats_products():
     return db.session.query(Category.id, Category.name, func.count(Product.id)). \
-        join(Product, Product.category_id == Category.id).group_by(Category.id).all()
+        outerjoin(Product, Product.category_id == Category.id).group_by(Category.id).all()
+
+
+def revenue_stats(kw=None):
+    query = db.session.query(Product.id, Product.name,
+                             func.sum(ReceiptDetails.quantity * ReceiptDetails.unit_price)).outerjoin(
+        ReceiptDetails, ReceiptDetails.product_id.__eq__(Product.id))
+    if kw:
+        query = query.filter(Product.name.contains(kw))
+    return query.group_by(Product.id).all()
+
+
+def revenue_month_stats(year=2024):
+    query = db.session.query(func.extract('month', Receipt.created_date),
+                             func.sum(ReceiptDetails.quantity * ReceiptDetails.unit_price)) \
+        .join(Receipt, Receipt.id.__eq__(ReceiptDetails.receipt_id)). \
+        filter(func.extract('year', Receipt.created_date).__eq__(year))
+    return query.group_by(func.extract('month', Receipt.created_date)).all()
 
 
 def add_receipt(cart):
@@ -68,6 +85,21 @@ def add_receipt(cart):
             db.session.add(d)
         db.session.commit()
 
+
+def get_product_by_id(id):
+    return Product.query.get(id)
+
+
+def get_comments_by_product(id):
+    return Comment.query.filter(Comment.product_id.__eq__(id)).order_by(-Comment.id).all()
+
+
+def add_comment(product_id, content):
+    c = Comment(product_id=product_id, content=content, user=current_user)
+    db.session.add(c)
+    db.session.commit()
+
+    return c
 
 if __name__ == "__main__":
     with app.app_context():

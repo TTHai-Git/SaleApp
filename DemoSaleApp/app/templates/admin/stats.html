@@ -6,12 +6,32 @@
 
     let data = [];
     let labels = [];
+
+    let data1 = [];
+    let labels1 = [];
+
+    let data2 = [];
+    let labels2 = [];
+
     {% for s in stats %}
         data.push({{s[2]}})
         labels.push('{{s[1]}}')
     {% endfor %}
+
+     {% for s in revenue_stats %}
+        data1.push({{s[2]}})
+        labels1.push('{{s[1]}}')
+    {% endfor %}
+
+    {% for s in revenue_month_stats %}
+        data2.push({{s[1]}})
+        labels2.push({{s[0]}})
+    {% endfor %}
+
     window.onload = function() {
       const ctx = document.getElementById('myChart');
+      const ctx1 = document.getElementById('myChart1');
+      const ctx2 = document.getElementById('myChart2');
 
       new Chart(ctx, {
         type: 'pie',
@@ -31,14 +51,74 @@
           }
         }
       });
+
+      new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: labels1,
+          datasets: [{
+            label: '# DOANH THU',
+            data: data1,
+            borderWidth: 1,
+            backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: labels2,
+          datasets: [{
+            label: '# DOANH THU TRONG NAM THEO CAC THANG',
+            data: data2,
+            borderWidth: 1,
+            backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
     }
+
+
+
 
 
 </script>
 
 <div class="row">
-    <div class="col-md-5"></div>
-    <div class="col-md-7">
+    <div class="col-md-5 col-xs-12">
+        <h2 class="text text-info text-center">BẢNG THỐNG KẾ SỐ LƯỢNG SẢN PHẨM THEO LOẠI SẢN PHẨM</h2>
+        <table class="table table-bordered table-dark table-hover">
+            <tr>
+                <th>Mã Loại Sản Phẩm</th>
+                <th>Loại Sản Phẩm</th>
+                <th>Số Lượng Sản Phẩm</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{s[0]}}</td>
+                <td>{{s[1]}}</td>
+                <td>{{s[2]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
         <div>
             <canvas id="myChart"></canvas>
         </div>
@@ -46,4 +126,63 @@
     </div>
 </div>
 
+<div class="row">
+
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <h2 class="text text-info text-center">BẢNG DỮ LIỆU THÔNG KÊ DOANH THU</h2>
+        <table class="table table-dark table-bordered table-hover">
+            <tr>
+                <th>Id</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Doanh Thu Tổng</th>
+            </tr>
+            {% for s in revenue_stats %}
+            <tr>
+                <td>{{s[0]}}</td>
+                <td>{{s[1]}}</td>
+                <td>{{"{:,.0f}".format(s[2])}} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+        <div>
+            <canvas id="myChart1"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <h2 class="text text-info text-center">BẢNG DỮ LIỆU THÔNG KÊ DOANH THU TRONG NĂM CỦA CÁC THÁNG</h2>
+        <table class="table table-dark table-bordered table-hover">
+            <tr>
+                <th>Tháng</th>
+                <th>Doanh Thu Tổng</th>
+            </tr>
+            {% for s in revenue_month_stats %}
+            <tr>
+                <td>{{s[0]}}</td>
+                <td>{{"{:,.0f}".format(s[1])}} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+        <div>
+            <canvas id="myChart2"></canvas>
+        </div>
+
+    </div>
+</div>
+<!--{{revenue_stats}}-->
+<!--{{revenue_month_stats}}-->
 {% endblock %}

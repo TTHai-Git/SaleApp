@@ -1,4 +1,4 @@
-from flask import redirect
+from flask import redirect, request
 from flask_admin import BaseView, expose
 from flask_login import current_user, logout_user
 
@@ -125,7 +125,9 @@ class TagsView(AdminAuthenticated):
 class StatsView(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/stats.html', stats=dao.stats_products())
+        kw = request.args.get('kw')
+        return self.render('admin/stats.html', stats=dao.stats_products(), revenue_stats=dao.revenue_stats(kw=kw),
+                           revenue_month_stats=dao.revenue_month_stats())
 
 
 class LogoutView(BaseView):

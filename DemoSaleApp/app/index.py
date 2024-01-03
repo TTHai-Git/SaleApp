@@ -44,7 +44,8 @@ def user_register():
 def common_response():
     return {
         'categories': dao.loadcategories(),
-        'cart': untils.count_cart(session.get('cart'))
+        'cart': untils.count_cart(session.get('cart')),
+        'UserRole': UserRole
     }
 
 
@@ -170,6 +171,28 @@ def clear_cart():
 @app.route('/cart')
 def cart():
     return render_template('cart.html')
+
+
+@app.route('/products/<id>')
+def product_details(id):
+    return render_template('productdetails.html', product=dao.get_product_by_id(id=id),
+                           comments=dao.get_comments_by_product(id=id))
+
+
+@login_required
+@app.route('/api/products/<id>/comments', methods=['post'])
+def add_comment(id):
+    try:
+        # import pdb
+        # pdb.set_trace()
+        c = dao.add_comment(product_id=id, content=request.json.get('content'))
+    except Exception as ex:
+        print(ex)
+        return jsonify({'status': 500, 'err_msg': str(ex)})
+    else:
+        return jsonify({'status': 200, 'comment': {'content': c.content,
+                                                   'created_date': c.created_date,
+                                                   'user': {'avatar': c.user.avatar}}})
 
 
 if __name__ == "__main__":

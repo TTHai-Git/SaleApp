@@ -27,6 +27,7 @@ class User(db.Model, UserMixin):
     joined_data = Column(DateTime, default=datetime.now())
     user_role = Column(Enum(UserRole), default=UserRole.USER)
     receipts = relationship('Receipt', backref='user', lazy=True)
+    comments = relationship('Comment', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
@@ -62,6 +63,7 @@ class Product(db.Model):
     tags = relationship('Tag', secondary='product_tag', lazy='subquery',
                         backref=backref('products', lazy=True))
     receipt_details = relationship('ReceiptDetails', backref='product', lazy=True)
+    comments = relationship('Comment', backref='product', lazy=True)
 
     def __str__(self):
         return self.name
@@ -132,10 +134,21 @@ class ReceiptDetails(BaseModel):
     product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
 
 
+class Interaction(BaseModel):
+    __abstract__ = True
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
+
+
+class Comment(Interaction):
+    content = Column(String(255), nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
+
+
 if __name__ == "__main__":
     with app.app_context():
         # pass
-        # db.drop_all()
+        #db.drop_all()
         #
         db.create_all()
         # c1 = Category(name='Laptop')
