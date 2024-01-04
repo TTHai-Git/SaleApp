@@ -37,7 +37,8 @@ class ProductView(AdminAuthenticated):
         'tags': "Khuyến Mãi"
 
     }
-    form_excluded_columns = ['products']
+    form_excluded_columns = ['products', 'receipt_details', 'comments']
+
 
     # def is_accessible(self):
     #     return current_user.is_authenticated

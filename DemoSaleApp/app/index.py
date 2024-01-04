@@ -62,13 +62,10 @@ def login():
         password = request.form.get("password")
         user = dao.get_user(username, password)
         try:
+            Next = request.args.get('next')
             if user:
                 login_user(user=user)
-                if current_user.user_role == UserRole.ADMIN:
-                    return redirect('/admin')
-                else:
-                    Next = request.args.get('next')
-                    return redirect('/' if Next is None else Next)
+                return redirect('/' if Next is None else Next)
             else:
                 err_msg = 'ĐĂNG NHẬP THẤT BẠI VUI LÒNG KIỂM TRA LẠI UserName Hoặc PassWord!!!'
         except Exception as ex:
@@ -179,8 +176,8 @@ def product_details(id):
                            comments=dao.get_comments_by_product(id=id))
 
 
-@login_required
 @app.route('/api/products/<id>/comments', methods=['post'])
+@login_required
 def add_comment(id):
     try:
         # import pdb
@@ -193,6 +190,11 @@ def add_comment(id):
         return jsonify({'status': 200, 'comment': {'content': c.content,
                                                    'created_date': c.created_date,
                                                    'user': {'avatar': c.user.avatar}}})
+
+
+@app.route('/profile')
+def show_profile():
+    return render_template('profile.html',user=current_user)
 
 
 if __name__ == "__main__":

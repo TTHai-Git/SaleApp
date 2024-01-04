@@ -16,7 +16,7 @@
                 {% endfor %}
                 {% if current_user.is_authenticated %}
                 <li>
-                    <a class="nav-link text-info" href="#"><img src="{{current_user.avatar}}" class="rounded" width="25"/> Chào {{current_user.username}} !
+                    <a class="nav-link text-info" href="/profile"><img src="{{current_user.avatar}}" class="rounded" width="25"/> Chào {{current_user.username}} !
                     </a>
                 </li>
                 <li>

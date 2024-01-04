@@ -23,6 +23,8 @@ class User(db.Model, UserMixin):
     avatar = Column(String(255),
                     default='https://res.cloudinary.com/dh5jcbzly/image/upload/v1703666812/hme7xdtwowv4rloj1dzq.jpg')
     email = Column(String(100), unique=True)
+    phone = Column(String(10), nullable=True, default='Text')
+    address = Column(String(255), nullable=True, default='Text')
     active = Column(Boolean, default=True)
     joined_data = Column(DateTime, default=datetime.now())
     user_role = Column(Enum(UserRole), default=UserRole.USER)
@@ -148,37 +150,37 @@ class Comment(Interaction):
 if __name__ == "__main__":
     with app.app_context():
         # pass
-        #db.drop_all()
+        db.drop_all()
         #
         db.create_all()
-        # c1 = Category(name='Laptop')
-        # c2 = Category(name='PC')
-        # c3 = Category(name='Tablet')
-        # c4 = Category(name='Mobile')
-        #
-        # db.session.add_all([c1, c2, c3, c4])
-        # db.session.commit()
-        #
-        # p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
-        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-        #              category_id=4)
-        # p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
-        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-        #              category_id=4)
-        # p3 = Product(name='Lenovo Ideapad Gamming 3', price=16000000,
-        #              description='Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...',
-        #              status=True,
-        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-        #              category_id=1)
-        # p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
-        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-        #              category_id=3)
-        # p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
-        #              url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
-        #              category_id=2)
-        #
-        # db.session.add_all([p1, p2, p3, p4, p5])
-        # db.session.commit()
+        c1 = Category(name='Laptop')
+        c2 = Category(name='PC')
+        c3 = Category(name='Tablet')
+        c4 = Category(name='Mobile')
+
+        db.session.add_all([c1, c2, c3, c4])
+        db.session.commit()
+
+        p1 = Product(name='Iphone 14 Promax', price=33000000, description='Apple, 32GB, 128MGP', status=True,
+                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+                     category_id=4)
+        p2 = Product(name='Samsung Galaxy S20 Ultra', price=22000000, description='Samsung, 32GB, 128MGP', status=True,
+                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+                     category_id=4)
+        p3 = Product(name='Lenovo Ideapad Gamming 3', price=16000000,
+                     description='Lenovo, AMD, 8GB, 250GB SSD, I5 Gen12...',
+                     status=True,
+                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+                     category_id=1)
+        p4 = Product(name='Ipad Pro 2021', price=28000000, description='Apple, 64GB, 128GB', status=True,
+                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+                     category_id=3)
+        p5 = Product(name='PC Vipper', price=12000000, description='Intel, 16GB, 250GB SSD, I3 Gen12', status=True,
+                     url_img='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg',
+                     category_id=2)
+
+        db.session.add_all([p1, p2, p3, p4, p5])
+        db.session.commit()
         #
         # tag1 = Tag(id='pmt', name='promotion', description='khuyến mãi')
         # tag2 = Tag(id='new', name='new', description='Hàng Mới Nhập Khẩu')
@@ -186,12 +188,12 @@ if __name__ == "__main__":
         # db.session.add_all([tag1, tag2])
         # db.session.commit()
         #
-        # u1 = User(name='User', username='user', password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
-        # u2 = User(name='Admin', username='admin',
-        #           password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), user_role=UserRole.ADMIN)
-        #
-        # db.session.add_all([u1, u2])
-        # db.session.commit()
+        u1 = User(name='User', username='user', password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
+        u2 = User(name='Admin', username='admin',
+                  password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), user_role=UserRole.ADMIN)
+
+        db.session.add_all([u1, u2])
+        db.session.commit()
 
         # Thêm dữ liêu từ model ánh xạ xuống database
 
