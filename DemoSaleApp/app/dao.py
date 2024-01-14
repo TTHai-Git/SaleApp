@@ -86,6 +86,18 @@ def add_receipt(cart):
         db.session.commit()
 
 
+def upload_imgae(id, avatar):
+    user = db.session.query(User).filter(User.id.__eq__(id)).first()
+
+    if avatar:
+        res = cloudinary.uploader.upload(avatar)
+        user.avatar = res['secure_url']
+
+    db.session.add(user)
+    db.session.commit()
+
+
+
 def get_product_by_id(id):
     return Product.query.get(id)
 

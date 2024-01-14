@@ -18,7 +18,7 @@ def trangchu():
                            pages=math.ceil(count_products / app.config['PAGE_SIZE']))
 
 
-@app.route('/register', methods=['get', 'post'])
+@app.route('/register', methods=['GET', 'POST'])
 def user_register():
     err_msg = ""
     if request.method.__eq__('POST'):
@@ -54,10 +54,10 @@ def get_user(user_id):
     return dao.get_user_by_id(user_id)
 
 
-@app.route("/login", methods=['POST', 'GET'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     err_msg = ""
-    if request.method == 'POST':
+    if request.method.__eq__('POST'):
         username = request.form.get("username")
         password = request.form.get("password")
         user = dao.get_user(username, password)
@@ -79,7 +79,7 @@ def logout():
     return redirect('/login')
 
 
-@app.route('/api/cart', methods=['post'])
+@app.route('/api/cart', methods=['POST'])
 def add_to_cart():
     """
     {
@@ -135,7 +135,7 @@ def update_cart(product_id):
     return jsonify(untils.count_cart(cart))
 
 
-@app.route('/api/cart/<product_id>', methods=['delete'])
+@app.route('/api/cart/<product_id>', methods=['DELETE'])
 def delete_cart(product_id):
     cart = session.get('cart')
     if cart and product_id in cart:
@@ -159,7 +159,7 @@ def pay():
         return jsonify({'status': 200})
 
 
-@app.route('/cart', methods=['post'])
+@app.route('/cart', methods=['POST'])
 def clear_cart():
     session.pop('cart')
     return redirect('/cart')
@@ -176,7 +176,7 @@ def product_details(id):
                            comments=dao.get_comments_by_product(id=id))
 
 
-@app.route('/api/products/<id>/comments', methods=['post'])
+@app.route('/api/products/<id>/comments', methods=['POST'])
 @login_required
 def add_comment(id):
     try:
@@ -194,7 +194,16 @@ def add_comment(id):
 
 @app.route('/profile')
 def show_profile():
-    return render_template('profile.html',user=current_user)
+    return render_template('profile.html', user=current_user)
+
+
+@app.route('/profile/upload', methods=['GET', 'POST'])
+def upload_avatar():
+    avatar = request.files.get('avatar')
+    if request.method.__eq__('POST'):
+        if avatar:
+            dao.upload_imgae(id=current_user.id, avatar=avatar)
+    return redirect('/profile')
 
 
 if __name__ == "__main__":
