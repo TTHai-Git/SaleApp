@@ -14,25 +14,33 @@ class UserRole(enum.Enum):
     USER = 2
 
 
+class SexEnum(enum.Enum):
+    Nam = "Male",
+    Nữ = "Female"
+
+
 class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
+    first_name = Column(String(20), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    dob = Column(DateTime, default=datetime.now())
     username = Column(String(50), nullable=False, unique=True)
-    password = Column(String(255), nullable=False)
+    sex = Column(Enum(SexEnum))
+    password = Column(String(50), nullable=False)
     avatar = Column(String(255),
                     default='https://res.cloudinary.com/dh5jcbzly/image/upload/v1703666812/hme7xdtwowv4rloj1dzq.jpg')
     email = Column(String(100), unique=True)
     phone = Column(String(10), nullable=True, default='Text')
-    address = Column(String(255), nullable=True, default='Text')
+    address = Column(String(100), nullable=True, default='Text')
     active = Column(Boolean, default=True)
-    joined_data = Column(DateTime, default=datetime.now())
-    user_role = Column(Enum(UserRole), default=UserRole.USER)
+    joined_date = Column(DateTime, default=datetime.now())
+    role = Column(Enum(UserRole), default=UserRole.USER)
     receipts = relationship('Receipt', backref='user', lazy=True)
     comments = relationship('Comment', backref='user', lazy=True)
 
     def __str__(self):
-        return self.name
+        return self.last_name + ' ' + self.first_name
 
 
 class Category(db.Model):
@@ -188,9 +196,10 @@ if __name__ == "__main__":
         # db.session.add_all([tag1, tag2])
         # db.session.commit()
         #
-        u1 = User(name='User', username='user', password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
-        u2 = User(name='Admin', username='admin',
-                  password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), user_role=UserRole.ADMIN)
+        u1 = User(first_name="Hải", last_name="Trịnh Thanh", sex=SexEnum.Nam.name, username='user',
+                  password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()))
+        u2 = User(first_name="Đạt", last_name="Nguyễn Thành", username='admin', sex=SexEnum.Nam.name,
+                  password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()), role=UserRole.ADMIN)
 
         db.session.add_all([u1, u2])
         db.session.commit()

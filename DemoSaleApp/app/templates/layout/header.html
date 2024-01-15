@@ -16,13 +16,14 @@
                 {% endfor %}
                 {% if current_user.is_authenticated %}
                 <li>
-                    <a class="nav-link text-info" href="/profile"><img src="{{current_user.avatar}}" class="rounded" width="25"/> Chào {{current_user.username}} !
+                    <a class="nav-link text-info" href="/profile"><img src="{{current_user.avatar}}" class="rounded"
+                                                                       width="25"/> Chào {{current_user.username}} !
                     </a>
                 </li>
                 <li>
                     <a class="nav-link text-info" href="/logout">ĐĂNG XUẤT </a>
                 </li>
-                {% if current_user.user_role == UserRole.ADMIN %}
+                {% if current_user.role == UserRole.ADMIN %}
                 <li>
                     <a class="nav-link text-info" href="/admin">QUẢN TRỊ </a>
                 </li>

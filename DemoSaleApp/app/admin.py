@@ -10,7 +10,7 @@ from flask_admin.contrib.sqla import ModelView
 
 class AdminAuthenticated(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+        return current_user.is_authenticated and current_user.role == UserRole.ADMIN
 
 
 class ProductView(AdminAuthenticated):
